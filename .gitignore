@@ -2,4 +2,5 @@
 .cache
 
 bin/
+bin-int/
 build/

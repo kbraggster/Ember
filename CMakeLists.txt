@@ -1,20 +1,23 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(EmberEngine)
 
-set(OSBitness 32)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(OSBitness 64)
-endif()
-
-set(BinDir "${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}${OSBitness}/${CMAKE_BUILD_TYPE}")
-set(BinIntDir "${CMAKE_SOURCE_DIR}/bin-int/${CMAKE_SYSTEM_NAME}${OSBitness}/${CMAKE_BUILD_TYPE}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BinDir}")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${BinIntDir}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BinIntDir}")
+set(TargetDir "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_PROCESSOR}")
+set(ObjDir "${CMAKE_SOURCE_DIR}/bin-int/${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_PROCESSOR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ObjDir}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ObjDir}/lib")
 
 add_subdirectory(Ember)
 add_subdirectory(Matchstick)
+
+set_target_properties(Matchstick PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${TargetDir}/Matchstick"
+)
+
+set_target_properties(Ember PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${ObjDir}/Ember"
+        LIBRARY_OUTPUT_DIRECTORY "${ObjDir}/Ember"
+        RUNTIME_OUTPUT_DIRECTORY "${ObjDir}/Ember"
+)

@@ -10,7 +10,8 @@ set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 file(GLOB_RECURSE SOURCE_FILES "${SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "${INCLUDE_DIR}/*.h")
 
-add_library("${PROJECT_NAME}" STATIC ${SOURCE_FILES} ${HEADER_FILES})
+add_library("${PROJECT_NAME}" STATIC ${SOURCE_FILES} ${HEADER_FILES}
+        src/Ember/Core/EntryPoint.h)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
 

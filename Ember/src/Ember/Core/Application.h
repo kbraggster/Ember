@@ -5,6 +5,11 @@ namespace Ember
 class Application
 {
   public:
-    void print();
+    Application();
+    ~Application();
+    void Run();
 };
+
+Application* CreateApplication();
+
 } // namespace Ember

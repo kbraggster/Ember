@@ -1,12 +1,20 @@
 #include "Application.h"
-#include <iostream>
 
 namespace Ember
 {
 
-void Application::print()
+Application::Application()
 {
-    std::cout << "Hello World!" << std::endl;
+}
+
+Application::~Application()
+{
+}
+
+void Application::Run()
+{
+    while (true)
+        ;
 }
 
 } // namespace Ember

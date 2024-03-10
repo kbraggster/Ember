@@ -1,10 +1,5 @@
 #pragma once
 
-extern Ember::Application* CreateApplication();
+#include "Application.h"
 
-int main(int argc, char** argv)
-{
-    const auto app = Ember::CreateApplication();
-    app->Run();
-    delete app;
-}
+extern Ember::Application* CreateApplication();

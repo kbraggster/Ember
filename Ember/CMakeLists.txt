@@ -7,20 +7,35 @@ project(Ember)
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
+# Recursively find source and header files
 file(GLOB_RECURSE SOURCE_FILES "${SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "${INCLUDE_DIR}/*.h")
 
-add_library("${PROJECT_NAME}" STATIC ${SOURCE_FILES} ${HEADER_FILES}
-        src/Ember/Core/EntryPoint.h
-        src/Ember/Core/Log.cpp
-        src/Ember/Core/Log.h
-        src/Ember/Core/EntryPoint.cpp)
+add_library("${PROJECT_NAME}" STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIR})
 
+# Set output directory
+set(TargetDir ${TargetDir}/${PROJECT_NAME})
+set(ObjDir ${ObjDir}/${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${TargetDir}"
+        ARCHIVE_OUTPUT_DIRECTORY "${ObjDir}"
+        LIBRARY_OUTPUT_DIRECTORY "${ObjDir}"
+)
+
+# Add libraries
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/spdlog)
 
+# Set output directory for libraries
+set(OutputDir ${EmberOutputDir})
+set_target_properties(glfw PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+        LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
+set_target_properties(spdlog PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+        LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
+
+# Include and link libraries
 target_include_directories(${PROJECT_NAME} PRIVATE vendor/glfw/include
         PRIVATE vendor/spdlog/include)
 

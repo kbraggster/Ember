@@ -5,4 +5,4 @@
 bin/
 bin-int/
 build/
-cmake-build-debug/
+cmake-build-*/

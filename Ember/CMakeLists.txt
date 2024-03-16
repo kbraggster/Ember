@@ -24,6 +24,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY "${ObjDir}"
 )
 
+# Add precompiled header
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/empch.h)
+
 # Add libraries
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/spdlog)

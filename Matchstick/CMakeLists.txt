@@ -13,8 +13,6 @@ set(TargetDir ${TargetDir}/${PROJECT_NAME})
 set(ObjDir ${ObjDir}/${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${TargetDir}"
-        ARCHIVE_OUTPUT_DIRECTORY "${ObjDir}"
-        LIBRARY_OUTPUT_DIRECTORY "${ObjDir}"
 )
 
 # Add Ember library

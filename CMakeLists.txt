@@ -5,6 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(EmberEngine)
 
 # If using macOS, set system name to "macOS" instead of "Darwin"
+Set(SystemName ${CMAKE_SYSTEM_NAME})
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
     Set(SystemName "macOS")
 endif ()

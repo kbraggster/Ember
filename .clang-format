@@ -1,4 +1,6 @@
 Language: Cpp
 BasedOnStyle: Microsoft
+SortIncludes: Never
 PointerAlignment: Left
 AllowShortFunctionsOnASingleLine: All
+AlignConsecutiveAssignments: true

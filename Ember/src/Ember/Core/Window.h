@@ -1,4 +1,6 @@
 #pragma once
+#include "Ember/Events/Event.h"
+#include <functional>
 
 namespace Ember
 {
@@ -6,11 +8,11 @@ namespace Ember
 struct WindowProps
 {
     std::string Title;
-    uint64_t Width;
-    uint64_t Height;
+    unsigned int Width;
+    unsigned int Height;
 
-    explicit WindowProps(const std::string& title = "Ember Engine", const uint64_t width = 1280,
-                         const uint64_t height = 720)
+    explicit WindowProps(const std::string& title = "Ember Engine", const unsigned int width = 1280,
+                         const unsigned int height = 720)
         : Title(title), Width(width), Height(height)
     {
     }
@@ -18,6 +20,22 @@ struct WindowProps
 
 class Window
 {
+  public:
+    using EventCallbackFn = std::function<void(Event&)>;
+
+    virtual ~Window() = default;
+
+    virtual void OnUpdate() = 0;
+
+    virtual unsigned int GetWidth() const  = 0;
+    virtual unsigned int GetHeight() const = 0;
+
+    // Window attributes
+    virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+    virtual void SetVSync(bool enabled)                            = 0;
+    virtual bool IsVSync() const                                   = 0;
+
+    static Window* Create(const WindowProps& props = WindowProps());
 };
 
 } // namespace Ember

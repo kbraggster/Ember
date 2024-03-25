@@ -1,7 +1,5 @@
 #include "Application.h"
 
-#include "Ember/Core/Log.h"
-
 namespace Ember
 {
 

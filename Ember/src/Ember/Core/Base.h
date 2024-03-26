@@ -1,5 +1,8 @@
 #pragma once
 
+#define EM_BIND_EVENT_FN(fn)                                                                                           \
+    [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
 #ifdef EM_ENABLE_ASSERTS
 #define EM_ASSERT(x, ...)                                                                                              \
     {                                                                                                                  \

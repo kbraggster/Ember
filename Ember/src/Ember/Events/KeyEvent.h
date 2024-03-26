@@ -39,7 +39,8 @@ class KeyPressedEvent final : public KeyEvent
 
 class KeyReleasedEvent final : public KeyEvent
 {
-    KeyReleasedEvent(const int keycode) : KeyEvent(keycode) {}
+  public:
+    explicit KeyReleasedEvent(const int keycode) : KeyEvent(keycode) {}
 
     std::string ToString() const override
     {

@@ -31,6 +31,7 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE src/empch.h)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/imgui)
+add_subdirectory(vendor/glad)
 
 # Set output directory for libraries
 set(OutputDir ${EmberOutputDir})
@@ -40,14 +41,18 @@ set_target_properties(spdlog PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
 set_target_properties(imgui PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
+set_target_properties(glad PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+        LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
 
 # Include and link libraries
 target_include_directories(${PROJECT_NAME} PRIVATE vendor/glfw/include
         PRIVATE vendor/spdlog/include
-        PRIVATE vendor/imgui)
+        PRIVATE vendor/imgui
+        PRIVATE vendor/glad)
 
 target_link_directories(${PROJECT_NAME} PRIVATE vendor/glfw/src
         PRIVATE vendor/spdlog/src
-        PRIVATE vendor/imgui)
+        PRIVATE vendor/imgui
+        PRIVATE vendor/glad)
 
-target_link_libraries(${PROJECT_NAME} glfw spdlog imgui)
+target_link_libraries(${PROJECT_NAME} glfw spdlog imgui glad)

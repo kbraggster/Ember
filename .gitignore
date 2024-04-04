@@ -1,6 +1,7 @@
 .vscode
 .idea
 .cache
+.DS_Store
 
 bin/
 bin-int/

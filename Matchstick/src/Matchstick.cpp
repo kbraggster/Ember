@@ -5,9 +5,9 @@ class ExampleLayer final : public Ember::Layer
   public:
     ExampleLayer() : Layer("Example") {}
 
-    void OnUpdate() override { EM_INFO("ExampleLayer::Update"); }
+    void OnUpdate() override {}
 
-    void OnEvent(Ember::Event& event) override { EM_TRACE("{0}", event); }
+    void OnEvent(Ember::Event& event) override {}
 };
 
 class Matchstick : public Ember::Application
@@ -15,7 +15,7 @@ class Matchstick : public Ember::Application
   public:
     Matchstick() { PushLayer(new ExampleLayer()); }
 
-    ~Matchstick() {}
+    ~Matchstick() = default;
 };
 
 Ember::Application* Ember::CreateApplication()

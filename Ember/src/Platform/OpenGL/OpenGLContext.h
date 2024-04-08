@@ -7,10 +7,10 @@ struct GLFWwindow;
 namespace Ember
 {
 
-class OpenGLContext : public GraphicsContext
+class OpenGLContext final : public GraphicsContext
 {
   public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    explicit OpenGLContext(GLFWwindow* windowHandle);
 
     void Init() override;
     void SwapBuffers() override;

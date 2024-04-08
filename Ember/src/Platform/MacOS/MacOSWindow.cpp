@@ -4,6 +4,8 @@
 #include "Ember/Events/KeyEvent.h"
 #include "Ember/Events/MouseEvent.h"
 
+#include "Platform/OpenGL/OpenGLContext.h"
+
 namespace Ember
 {
 
@@ -47,6 +49,7 @@ void MacOSWindow::Init(const WindowProps& props)
         s_GLFWInitialized = true;
     }
 
+    // MacOS required code
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
@@ -54,7 +57,10 @@ void MacOSWindow::Init(const WindowProps& props)
 
     m_Window = glfwCreateWindow(static_cast<int>(props.Width), static_cast<int>(props.Height), m_Data.Title.c_str(),
                                 nullptr, nullptr);
-    glfwMakeContextCurrent(m_Window);
+
+    m_Context = new OpenGLContext(m_Window);
+    m_Context->Init();
+
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
 
@@ -140,7 +146,7 @@ void MacOSWindow::Shutdown()
 void MacOSWindow::OnUpdate()
 {
     glfwPollEvents();
-    glfwSwapBuffers(m_Window);
+    m_Context->SwapBuffers();
 }
 
 void MacOSWindow::SetVSync(const bool enabled)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Ember/Core/Window.h"
+#include "Ember/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -29,7 +30,8 @@ class MacOSWindow : public Window
     virtual void Init(const WindowProps& props);
     virtual void Shutdown();
 
-    GLFWwindow* m_Window{};
+    GLFWwindow* m_Window;
+    GraphicsContext* m_Context;
 
     struct WindowData
     {

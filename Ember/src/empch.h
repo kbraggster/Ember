@@ -12,4 +12,5 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Ember/Core/Base.h"
 #include "Ember/Core/Log.h"

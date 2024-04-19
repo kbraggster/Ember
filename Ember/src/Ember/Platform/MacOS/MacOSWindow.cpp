@@ -4,7 +4,7 @@
 #include "Ember/Events/KeyEvent.h"
 #include "Ember/Events/MouseEvent.h"
 
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Ember/Platform/Vulkan/VulkanContext.h"
 
 namespace Ember
 {
@@ -52,13 +52,12 @@ void MacOSWindow::Init(const WindowProps& props)
     // MacOS required code
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
     m_Window = glfwCreateWindow(static_cast<int>(props.Width), static_cast<int>(props.Height), m_Data.Title.c_str(),
                                 nullptr, nullptr);
 
-    m_Context = new OpenGLContext(m_Window);
+    m_Context = new VulkanContext(m_Window);
     m_Context->Init();
 
     glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -146,7 +145,7 @@ void MacOSWindow::Shutdown()
 void MacOSWindow::OnUpdate()
 {
     glfwPollEvents();
-    m_Context->SwapBuffers();
+    // m_Context->SwapBuffers();
 }
 
 void MacOSWindow::SetVSync(const bool enabled)

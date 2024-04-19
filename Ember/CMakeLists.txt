@@ -28,24 +28,30 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/empch.h)
 
 # Add libraries
+find_package(Vulkan REQUIRED)
+
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/glad)
 
 # Set output directory for libraries
-set(OutputDir ${EmberOutputDir})
-set_target_properties(imgui PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+set_target_properties(imgui PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
-set_target_properties(glfw PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+set_target_properties(glfw PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
-set_target_properties(spdlog PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+set_target_properties(spdlog PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
-set_target_properties(glad PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
+set_target_properties(glad PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${ObjDir}
         LIBRARY_OUTPUT_DIRECTORY ${ObjDir})
 
 # Include and link libraries
 target_include_directories(${PROJECT_NAME}
+        PRIVATE ${Vulkan_INCLUDE_DIRS}
         PRIVATE vendor/glfw/include
         PRIVATE vendor/spdlog/include
         PRIVATE vendor/imgui
@@ -57,4 +63,4 @@ target_link_directories(${PROJECT_NAME}
         PRIVATE vendor/imgui
         PRIVATE vendor/glad)
 
-target_link_libraries(${PROJECT_NAME} glfw spdlog imgui glad)
+target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw spdlog imgui glad)

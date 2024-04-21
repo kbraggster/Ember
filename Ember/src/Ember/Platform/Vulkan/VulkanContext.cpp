@@ -31,6 +31,7 @@ void VulkanContext::CreateInstance()
     createInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
 
+    // TODO: Platform specific extensions
     uint32_t glfwExtensionCount = 3;
     const char** glfwExtensions = (const char**)malloc(sizeof(const char*) * 3);
     glfwExtensions[0]           = "VK_KHR_surface";
@@ -44,8 +45,7 @@ void VulkanContext::CreateInstance()
     createInfo.enabledLayerCount = 0;
 
     const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_Instance);
-    if (result != VK_SUCCESS)
-        EM_CORE_ERROR("Vulkan: Failed to create instance! Error Code: {0}", result);
+    EM_CORE_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan instance!");
 }
 
 } // namespace Ember

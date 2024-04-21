@@ -27,6 +27,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Add precompiled header
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/empch.h)
 
+# TODO: Platform specific macros
+# Build Configurations
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    # Define the macro to enable debug breaks only for Debug build
+    target_compile_definitions(${PROJECT_NAME} PRIVATE EM_ENABLE_ASSERTS)
+endif ()
+
 # Add libraries
 find_package(Vulkan REQUIRED)
 

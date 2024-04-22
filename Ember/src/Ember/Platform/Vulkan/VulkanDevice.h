@@ -12,11 +12,11 @@ class VulkanDevice
     explicit VulkanDevice(GLFWwindow* window);
     ~VulkanDevice();
 
-    std::string GetDeviceType() const;
+    std::string GetAPIVersion() const;
     std::string GetDeviceVendor() const;
-
-    VkPhysicalDeviceProperties GetProperties() const { return m_DeviceProperties; }
-    VkPhysicalDeviceFeatures GetFeatures() const { return m_DeviceFeatures; }
+    std::string GetDeviceName() const;
+    std::string GetDeviceType() const;
+    std::string GetDriverVersion() const;
 
   private:
     void CreateInstance();

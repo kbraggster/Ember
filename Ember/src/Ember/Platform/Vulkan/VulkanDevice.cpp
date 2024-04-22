@@ -77,6 +77,36 @@ bool VulkanDevice::IsDeviceSuitable(const VkPhysicalDevice device)
     return m_DeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && m_DeviceFeatures.geometryShader;
 }
 
+std::string VulkanDevice::GetAPIVersion() const
+{
+    std::ostringstream oss;
+    oss << VK_VERSION_MAJOR(m_DeviceProperties.apiVersion) << "." << VK_VERSION_MINOR(m_DeviceProperties.apiVersion)
+        << "." << VK_VERSION_PATCH(m_DeviceProperties.apiVersion);
+    return oss.str();
+}
+
+std::string VulkanDevice::GetDeviceVendor() const
+{
+    switch (m_DeviceProperties.vendorID)
+    {
+        case 0x1022:
+            return "AMD";
+        case 0x10DE:
+            return "NVIDIA";
+        case 0x8086:
+            return "Intel";
+        case 0x106B:
+            return "Apple";
+        default:
+            return "Unknown Vendor";
+    }
+}
+
+std::string VulkanDevice::GetDeviceName() const
+{
+    return m_DeviceProperties.deviceName;
+}
+
 std::string VulkanDevice::GetDeviceType() const
 {
     switch (m_DeviceProperties.deviceType)
@@ -96,21 +126,9 @@ std::string VulkanDevice::GetDeviceType() const
     }
 }
 
-std::string VulkanDevice::GetDeviceVendor() const
+std::string VulkanDevice::GetDriverVersion() const
 {
-    switch (m_DeviceProperties.vendorID)
-    {
-        case 0x1022:
-            return "AMD";
-        case 0x10DE:
-            return "NVIDIA";
-        case 0x8086:
-            return "Intel";
-        case 0x106B:
-            return "Apple";
-        default:
-            return "Unknown Vendor";
-    }
+    return std::to_string(m_DeviceProperties.driverVersion);
 }
 
 } // namespace Ember

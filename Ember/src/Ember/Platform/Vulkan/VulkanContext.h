@@ -24,8 +24,8 @@ class VulkanContext final : public GraphicsContext
 
   private:
     GLFWwindow* m_WindowHandle;
-    VkInstance m_Instance;
 
+    VkInstance m_Instance;
     std::unique_ptr<VulkanDevice> m_Device;
 };
 

@@ -3,59 +3,26 @@
 namespace Ember
 {
 
-VulkanDevice::VulkanDevice(GLFWwindow* window) : m_Window(window)
+VulkanDevice::VulkanDevice(GLFWwindow* window, VkInstance instance) : m_Window(window)
 {
-    CreateInstance();
-    PickPhysicalDevice();
+    PickPhysicalDevice(instance);
 }
 
 VulkanDevice::~VulkanDevice()
 {
     vkDestroyDevice(m_Device, nullptr);
-    vkDestroyInstance(m_Instance, nullptr);
 }
 
-void VulkanDevice::CreateInstance()
-{
-    VkApplicationInfo appInfo{};
-    appInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.pApplicationName   = "Ember Engine";
-    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.pEngineName        = "Ember";
-    appInfo.engineVersion      = VK_MAKE_VERSION(1, 0, 0);
-    appInfo.apiVersion         = VK_API_VERSION_1_0;
-
-    VkInstanceCreateInfo createInfo{};
-    createInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    createInfo.pApplicationInfo = &appInfo;
-
-    // TODO: Platform specific extensions
-    const uint32_t glfwExtensionCount = 3;
-    const char** glfwExtensions       = (const char**)malloc(sizeof(const char*) * 3);
-    glfwExtensions[0]                 = "VK_KHR_surface";
-    glfwExtensions[1]                 = "VK_EXT_metal_surface";
-    glfwExtensions[2]                 = "VK_KHR_portability_enumeration";
-    createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-
-    createInfo.enabledExtensionCount   = glfwExtensionCount;
-    createInfo.ppEnabledExtensionNames = glfwExtensions;
-
-    createInfo.enabledLayerCount = 0;
-
-    const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_Instance);
-    EM_CORE_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan instance!");
-}
-
-void VulkanDevice::PickPhysicalDevice()
+void VulkanDevice::PickPhysicalDevice(VkInstance instance)
 {
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
     uint32_t deviceCount = 0;
-    vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
+    vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
     EM_CORE_ASSERT(deviceCount, "Failed to find GPU's that support Vulkan!");
 
     std::vector<VkPhysicalDevice> devices(deviceCount);
-    vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
+    vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
     for (const auto& device : devices)
     {

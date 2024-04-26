@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Ember/Renderer/GraphicsContext.h"
-
-#include "Ember/Platform/Vulkan/VulkanDevice.h"
-
 #include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#include "Ember/Renderer/GraphicsContext.h"
+#include "Ember/Platform/Vulkan/VulkanDevice.h"
 
 namespace Ember
 {

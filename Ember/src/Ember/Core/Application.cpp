@@ -13,6 +13,7 @@ Application::Application()
     m_Window = std::unique_ptr<Window>(Window::Create());
     m_Window->SetEventCallback(EM_BIND_EVENT_FN(Application::OnEvent));
 
+    // TODO: Reimplement ImGui for Vulkan
     // m_ImGuiLayer = new ImGuiLayer();
     // PushOverlay(m_ImGuiLayer);
 }

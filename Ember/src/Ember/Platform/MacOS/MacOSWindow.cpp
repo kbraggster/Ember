@@ -49,9 +49,6 @@ void MacOSWindow::Init(const WindowProps& props)
         s_GLFWInitialized = true;
     }
 
-    // MacOS required code
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
     m_Window = glfwCreateWindow(static_cast<int>(props.Width), static_cast<int>(props.Height), m_Data.Title.c_str(),

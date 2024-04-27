@@ -3,7 +3,7 @@
 namespace Ember
 {
 
-VulkanDevice::VulkanDevice(GLFWwindow* window, VkInstance instance) : m_Window(window)
+VulkanDevice::VulkanDevice(GLFWwindow* window, VkInstance& instance) : m_Window(window)
 {
     PickPhysicalDevice(instance);
 }
@@ -13,7 +13,7 @@ VulkanDevice::~VulkanDevice()
     vkDestroyDevice(m_Device, nullptr);
 }
 
-void VulkanDevice::PickPhysicalDevice(VkInstance instance)
+void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
 {
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 

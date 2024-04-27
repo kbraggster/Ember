@@ -9,7 +9,7 @@ namespace Ember
 class VulkanDevice
 {
   public:
-    explicit VulkanDevice(GLFWwindow* window, VkInstance instance);
+    explicit VulkanDevice(GLFWwindow* window, VkInstance& instance);
     ~VulkanDevice();
 
     std::string GetAPIVersion() const;
@@ -19,7 +19,7 @@ class VulkanDevice
     std::string GetDriverVersion() const;
 
   private:
-    void PickPhysicalDevice(VkInstance instance);
+    void PickPhysicalDevice(VkInstance& instance);
 
     // int RateDeviceSuitability(VkPhysicalDevice device);
     bool IsDeviceSuitable(VkPhysicalDevice device);

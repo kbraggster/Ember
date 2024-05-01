@@ -1,5 +1,7 @@
 #include "VulkanDevice.h"
 
+#include <map>
+
 namespace Ember
 {
 
@@ -19,24 +21,48 @@ void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
 
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
-    EM_CORE_ASSERT(deviceCount, "Failed to find GPU's that support Vulkan!");
+    EM_CORE_ASSERT(deviceCount, "Vulkan: Failed to find GPU's that support Vulkan!");
 
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-    for (const auto& device : devices)
+    // Use an ordered map to automatically sort candidates by increasing score
+    std::multimap<int, VkPhysicalDevice> candidates;
+    for (auto& device : devices)
     {
-        if (IsDeviceSuitable(device))
-        {
-            physicalDevice = device;
-            break;
-        }
+        int score = RateDeviceSuitability(device);
+        candidates.insert(std::make_pair(score, device));
     }
 
-    EM_CORE_ASSERT(physicalDevice == VK_NULL_HANDLE, "Failed to find suitable GPU!");
+    // Check if the best candidate is suitable at all
+    if (candidates.rbegin()->first > 0)
+        physicalDevice = candidates.rbegin()->second;
+    else
+        EM_CORE_ERROR("Vulkan: Failed to find suitable GPU!");
+
+    // Retrieve properties of the selected device
+    vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties);
 }
 
-bool VulkanDevice::IsDeviceSuitable(const VkPhysicalDevice device)
+int VulkanDevice::RateDeviceSuitability(VkPhysicalDevice& device) const
+{
+    int score = 0;
+
+    // Discrete GPU's have a significant performance advantage
+    if (m_DeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+        score += 1000;
+
+    // Maximum possible size of textures affects graphics quality
+    score += m_DeviceProperties.limits.maxImageDimension2D;
+
+    // Application can't function without geometry shaders
+    if (!m_DeviceFeatures.geometryShader)
+        return 0;
+
+    return score;
+}
+
+bool VulkanDevice::IsDeviceSuitable(VkPhysicalDevice& device)
 {
     vkGetPhysicalDeviceProperties(device, &m_DeviceProperties);
     vkGetPhysicalDeviceFeatures(device, &m_DeviceFeatures);

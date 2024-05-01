@@ -21,8 +21,8 @@ class VulkanDevice
   private:
     void PickPhysicalDevice(VkInstance& instance);
 
-    // int RateDeviceSuitability(VkPhysicalDevice device);
-    bool IsDeviceSuitable(VkPhysicalDevice device);
+    int RateDeviceSuitability(VkPhysicalDevice& device) const;
+    bool IsDeviceSuitable(VkPhysicalDevice& device);
 
     GLFWwindow* m_Window;
 

@@ -11,7 +11,6 @@ VulkanContext::VulkanContext(GLFWwindow* windowHandle) : m_WindowHandle(windowHa
 void VulkanContext::Init()
 {
     CreateInstance();
-
     m_Device = std::make_unique<VulkanDevice>(m_WindowHandle, m_Instance);
 
     EM_CORE_INFO("Vulkan Info:");
@@ -20,6 +19,8 @@ void VulkanContext::Init()
     EM_CORE_INFO("  Device Name: {0}", m_Device->GetDeviceName());
     EM_CORE_INFO("  Device Type: {0}", m_Device->GetDeviceType());
     EM_CORE_INFO("  Driver Version: {0}", m_Device->GetDriverVersion());
+
+    m_DebugUtils.SetupDebugUtils(m_Instance);
 }
 
 VulkanContext::~VulkanContext()
@@ -46,11 +47,10 @@ void VulkanContext::CreateInstance()
     createInfo.pApplicationInfo = &appInfo;
 
     // TODO: Platform specific extensions
-    const uint32_t glfwExtensionCount = 3;
+    const uint32_t glfwExtensionCount = 2;
     const char** glfwExtensions       = (const char**)malloc(sizeof(const char*) * 3);
     glfwExtensions[0]                 = "VK_KHR_surface";
     glfwExtensions[1]                 = "VK_EXT_metal_surface";
-    glfwExtensions[2]                 = "VK_KHR_portability_enumeration";
     createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
     createInfo.enabledExtensionCount   = glfwExtensionCount;

@@ -34,8 +34,20 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PRIVATE EM_ENABLE_ASSERTS)
 endif ()
 
+# TODO: MoltenVK for macOS only
 # Add libraries
 find_package(Vulkan REQUIRED)
+find_path(MVK_INCLUDE_DIR NAMES vulkan/vulkan.h PATH_SUFFIXES Include)
+find_library(MVK_LIBRARY NAMES MoltenVK PATH_SUFFIXES Lib)
+if (MVK_INCLUDE_DIR AND MVK_LIBRARY)
+    # MoltenVK found
+    message(STATUS "MoltenVK found")
+    include_directories(${MVK_INCLUDE_DIR})
+    target_link_libraries(${PROJECT_NAME} ${MVK_LIBRARY} "-framework IOSurface" "-framework Metal" "-framework Foundation" "-framework QuartzCore")
+else ()
+    # MoltenVK not found
+    message(FATAL_ERROR "MoltenVK not found. Please set MOLTENVK_SDK to the MoltenVK installation directory.")
+endif ()
 
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/spdlog)

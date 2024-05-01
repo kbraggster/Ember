@@ -6,6 +6,7 @@
 
 #include "Ember/Renderer/GraphicsContext.h"
 #include "Ember/Platform/Vulkan/VulkanDevice.h"
+#include "Ember/Platform/Vulkan/VulkanDebugUtils.h"
 
 namespace Ember
 {
@@ -27,6 +28,8 @@ class VulkanContext final : public GraphicsContext
 
     VkInstance m_Instance;
     std::unique_ptr<VulkanDevice> m_Device;
+
+    VulkanDebugUtils m_DebugUtils;
 };
 
 } // namespace Ember

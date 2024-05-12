@@ -21,7 +21,7 @@ class VulkanContext final : public GraphicsContext
     void SwapBuffers() override;
 
   private:
-    void CreateInstance();
+    VkInstance CreateInstance();
 
   private:
     GLFWwindow* m_WindowHandle;

@@ -10,9 +10,9 @@ VulkanContext::VulkanContext(GLFWwindow* windowHandle) : m_WindowHandle(windowHa
 
 void VulkanContext::Init()
 {
-    CreateInstance();
-    m_Device = std::make_unique<VulkanDevice>(m_WindowHandle, m_Instance);
+    m_Instance = CreateInstance();
 
+    m_Device = std::make_unique<VulkanDevice>(m_WindowHandle, m_Instance);
     EM_CORE_INFO("Vulkan Info:");
     EM_CORE_INFO("  API Version: {0}", m_Device->GetAPIVersion());
     EM_CORE_INFO("  Device Vendor: {0}", m_Device->GetDeviceVendor());
@@ -32,7 +32,7 @@ void VulkanContext::SwapBuffers()
 {
 }
 
-void VulkanContext::CreateInstance()
+VkInstance VulkanContext::CreateInstance()
 {
     VkApplicationInfo appInfo{};
     appInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -58,8 +58,11 @@ void VulkanContext::CreateInstance()
 
     createInfo.enabledLayerCount = 0;
 
-    const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_Instance);
+    VkInstance instance;
+    const VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
     EM_CORE_ASSERT(result == VK_SUCCESS, "Failed to create Vulkan instance!");
+
+    return instance;
 }
 
 } // namespace Ember

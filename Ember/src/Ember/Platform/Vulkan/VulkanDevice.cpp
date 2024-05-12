@@ -15,9 +15,30 @@ VulkanDevice::~VulkanDevice()
     vkDestroyDevice(m_Device, nullptr);
 }
 
+QueueFamilyIndices VulkanDevice::FindQueueFamilies(VkPhysicalDevice& device)
+{
+    QueueFamilyIndices indices;
+
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+    for (int i = 0; const auto& queueFamily : queueFamilies)
+    {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+            indices.GraphicsFamily = i;
+        if (indices.IsComplete())
+            break;
+        i++;
+    }
+
+    return indices;
+}
+
 void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
 {
-    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -35,13 +56,19 @@ void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
     }
 
     // Check if the best candidate is suitable at all
-    if (candidates.rbegin()->first > 0)
-        physicalDevice = candidates.rbegin()->second;
-    else
-        EM_CORE_ERROR("Vulkan: Failed to find suitable GPU!");
+    if (!candidates.empty())
+    {
+        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+        if (candidates.rbegin()->first > 0)
+            physicalDevice = candidates.rbegin()->second;
+        else
+            EM_CORE_ASSERT(false, "Vulkan: Failed to find suitable GPU!");
 
-    // Retrieve properties of the selected device
-    vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties);
+        // Retrieve properties of the selected device
+        vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties);
+    }
+    else
+        EM_CORE_ASSERT(false, "Vulkan: Failed to find GPU's that support Vulkan!");
 }
 
 int VulkanDevice::RateDeviceSuitability(VkPhysicalDevice& device) const
@@ -64,10 +91,9 @@ int VulkanDevice::RateDeviceSuitability(VkPhysicalDevice& device) const
 
 bool VulkanDevice::IsDeviceSuitable(VkPhysicalDevice& device)
 {
-    vkGetPhysicalDeviceProperties(device, &m_DeviceProperties);
-    vkGetPhysicalDeviceFeatures(device, &m_DeviceFeatures);
+    QueueFamilyIndices indices = FindQueueFamilies(device);
 
-    return m_DeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && m_DeviceFeatures.geometryShader;
+    return indices.IsComplete();
 }
 
 std::string VulkanDevice::GetAPIVersion() const

@@ -6,11 +6,20 @@
 namespace Ember
 {
 
+struct QueueFamilyIndices
+{
+    std::optional<uint32_t> GraphicsFamily;
+
+    bool IsComplete() const { return GraphicsFamily.has_value(); }
+};
+
 class VulkanDevice
 {
   public:
     explicit VulkanDevice(GLFWwindow* window, VkInstance& instance);
     ~VulkanDevice();
+
+    QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice& device);
 
     std::string GetAPIVersion() const;
     std::string GetDeviceVendor() const;

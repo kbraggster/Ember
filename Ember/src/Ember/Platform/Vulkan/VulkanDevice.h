@@ -35,7 +35,6 @@ class VulkanDevice
 
     GLFWwindow* m_Window;
 
-    VkDevice m_Device;
     VkPhysicalDeviceProperties m_DeviceProperties;
     VkPhysicalDeviceFeatures m_DeviceFeatures;
 };

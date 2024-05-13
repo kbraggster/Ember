@@ -12,7 +12,6 @@ VulkanDevice::VulkanDevice(GLFWwindow* window, VkInstance& instance) : m_Window(
 
 VulkanDevice::~VulkanDevice()
 {
-    vkDestroyDevice(m_Device, nullptr);
 }
 
 QueueFamilyIndices VulkanDevice::FindQueueFamilies(VkPhysicalDevice& device)
@@ -47,25 +46,20 @@ void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-    // Use an ordered map to automatically sort candidates by increasing score
     std::multimap<int, VkPhysicalDevice> candidates;
     for (auto& device : devices)
     {
-        int score = RateDeviceSuitability(device);
+        VkPhysicalDeviceProperties deviceProperties;              // Local variable to hold properties
+        vkGetPhysicalDeviceProperties(device, &deviceProperties); // Retrieve properties
+
+        int score = RateDeviceSuitability(device); // Pass properties to the function
         candidates.insert(std::make_pair(score, device));
     }
 
-    // Check if the best candidate is suitable at all
     if (!candidates.empty())
     {
-        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-        if (candidates.rbegin()->first > 0)
-            physicalDevice = candidates.rbegin()->second;
-        else
-            EM_CORE_ASSERT(false, "Vulkan: Failed to find suitable GPU!");
-
-        // Retrieve properties of the selected device
-        vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties);
+        VkPhysicalDevice physicalDevice = candidates.rbegin()->second;
+        vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties); // Assign properties to member variable
     }
     else
         EM_CORE_ASSERT(false, "Vulkan: Failed to find GPU's that support Vulkan!");

@@ -5,7 +5,7 @@
 namespace Ember
 {
 
-VulkanDevice::VulkanDevice(GLFWwindow* window, VkInstance& instance) : m_Window(window)
+VulkanDevice::VulkanDevice(GLFWwindow* window, const VkInstance& instance) : m_Window(window)
 {
     PickPhysicalDevice(instance);
 }
@@ -14,7 +14,7 @@ VulkanDevice::~VulkanDevice()
 {
 }
 
-QueueFamilyIndices VulkanDevice::FindQueueFamilies(VkPhysicalDevice& device)
+QueueFamilyIndices VulkanDevice::FindQueueFamilies(const VkPhysicalDevice& device)
 {
     QueueFamilyIndices indices;
 
@@ -36,7 +36,7 @@ QueueFamilyIndices VulkanDevice::FindQueueFamilies(VkPhysicalDevice& device)
     return indices;
 }
 
-void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
+void VulkanDevice::PickPhysicalDevice(const VkInstance& instance)
 {
 
     uint32_t deviceCount = 0;
@@ -49,43 +49,45 @@ void VulkanDevice::PickPhysicalDevice(VkInstance& instance)
     std::multimap<int, VkPhysicalDevice> candidates;
     for (auto& device : devices)
     {
-        VkPhysicalDeviceProperties deviceProperties;              // Local variable to hold properties
-        vkGetPhysicalDeviceProperties(device, &deviceProperties); // Retrieve properties
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
 
-        int score = RateDeviceSuitability(device); // Pass properties to the function
+        int score = RateDeviceSuitability(device, m_DeviceProperties, m_DeviceFeatures);
         candidates.insert(std::make_pair(score, device));
     }
 
     if (!candidates.empty())
     {
         VkPhysicalDevice physicalDevice = candidates.rbegin()->second;
-        vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties); // Assign properties to member variable
+        vkGetPhysicalDeviceProperties(physicalDevice, &m_DeviceProperties);
     }
     else
         EM_CORE_ASSERT(false, "Vulkan: Failed to find GPU's that support Vulkan!");
 }
 
-int VulkanDevice::RateDeviceSuitability(VkPhysicalDevice& device) const
+int VulkanDevice::RateDeviceSuitability(const VkPhysicalDevice& device,
+                                        const VkPhysicalDeviceProperties& deviceProperties,
+                                        const VkPhysicalDeviceFeatures& deviceFeatures) const
 {
     int score = 0;
 
     // Discrete GPU's have a significant performance advantage
-    if (m_DeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+    if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
         score += 1000;
 
     // Maximum possible size of textures affects graphics quality
-    score += m_DeviceProperties.limits.maxImageDimension2D;
+    score += deviceProperties.limits.maxImageDimension2D;
 
     // Application can't function without geometry shaders
-    if (!m_DeviceFeatures.geometryShader)
+    if (!deviceFeatures.geometryShader)
         return 0;
 
     return score;
 }
 
-bool VulkanDevice::IsDeviceSuitable(VkPhysicalDevice& device)
+bool VulkanDevice::IsDeviceSuitable(const VkPhysicalDevice& device)
 {
-    QueueFamilyIndices indices = FindQueueFamilies(device);
+    const QueueFamilyIndices indices = FindQueueFamilies(device);
 
     return indices.IsComplete();
 }

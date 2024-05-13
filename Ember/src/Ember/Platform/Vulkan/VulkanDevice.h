@@ -16,10 +16,10 @@ struct QueueFamilyIndices
 class VulkanDevice
 {
   public:
-    explicit VulkanDevice(GLFWwindow* window, VkInstance& instance);
+    explicit VulkanDevice(GLFWwindow* window, const VkInstance& instance);
     ~VulkanDevice();
 
-    QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice& device);
+    QueueFamilyIndices FindQueueFamilies(const VkPhysicalDevice& device);
 
     std::string GetAPIVersion() const;
     std::string GetDeviceVendor() const;
@@ -28,10 +28,11 @@ class VulkanDevice
     std::string GetDriverVersion() const;
 
   private:
-    void PickPhysicalDevice(VkInstance& instance);
+    void PickPhysicalDevice(const VkInstance& instance);
 
-    int RateDeviceSuitability(VkPhysicalDevice& device) const;
-    bool IsDeviceSuitable(VkPhysicalDevice& device);
+    int RateDeviceSuitability(const VkPhysicalDevice& device, const VkPhysicalDeviceProperties& deviceProperties,
+                              const VkPhysicalDeviceFeatures& deviceFeatures) const;
+    bool IsDeviceSuitable(const VkPhysicalDevice& device);
 
     GLFWwindow* m_Window;
 

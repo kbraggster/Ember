@@ -14,6 +14,10 @@ endif ()
 set(TargetDir "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}-${SystemName}-${CMAKE_SYSTEM_PROCESSOR}")
 set(ObjDir "${CMAKE_SOURCE_DIR}/bin-int/${CMAKE_BUILD_TYPE}-${SystemName}-${CMAKE_SYSTEM_PROCESSOR}")
 
+# Set optimizations for Release build
+# -fno-exceptions can be added as argument to strip exceptions
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto -march=native -fno-rtti")
+
 # Add subdirectories
 add_subdirectory(Ember)
 add_subdirectory(Matchstick)

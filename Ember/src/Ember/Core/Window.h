@@ -15,6 +15,11 @@ struct WindowProps
                          const unsigned int height = 720)
         : Title(title), Width(width), Height(height)
     {
+#ifdef EM_BUILD_TYPE_DEBUG
+        Title += " (DEBUG)";
+#elif EM_BUILD_TYPE_RELEASE
+        Title += " (RELEASE)";
+#endif
     }
 };
 

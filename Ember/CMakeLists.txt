@@ -32,6 +32,10 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE src/empch.h)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     # Define the macro to enable debug breaks only for Debug build
     target_compile_definitions(${PROJECT_NAME} PRIVATE EM_ENABLE_ASSERTS)
+    add_compile_definitions(EM_BUILD_TYPE_DEBUG)
+endif ()
+if (CMAKE_BUILD_TYPE MATCHES Release)
+    add_compile_definitions(EM_BUILD_TYPE_RELEASE)
 endif ()
 
 # TODO: MoltenVK for macOS only
